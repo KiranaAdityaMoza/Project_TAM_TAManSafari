@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.uts_tam_tamansafari.R
@@ -83,7 +82,7 @@ fun MatchingItem(result: MatchingResult, onDetailClick: () -> Unit) {
             Surface(
                 modifier = Modifier.size(60.dp),
                 shape = RoundedCornerShape(8.dp),
-                color = Color.White
+                color = Color.LightGray
             ) {
                 result.imageRes?.let {
                     Image(
@@ -93,18 +92,18 @@ fun MatchingItem(result: MatchingResult, onDetailClick: () -> Unit) {
                     )
                 }
             }
-
+            
             Spacer(modifier = Modifier.width(16.dp))
-
+            
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = result.nama, fontWeight = FontWeight.Bold)
                 Text(text = result.petani, fontWeight = FontWeight.Bold, fontSize = 14.sp)
                 Text(text = result.tersedia, fontSize = 12.sp, color = Color.Gray)
                 Text(text = result.lokasi, fontSize = 12.sp, color = Color.Gray)
             }
-
+            
             Spacer(modifier = Modifier.width(8.dp))
-
+            
             Column(horizontalAlignment = Alignment.End) {
                 Surface(
                     color = LightGreen,
@@ -117,9 +116,9 @@ fun MatchingItem(result: MatchingResult, onDetailClick: () -> Unit) {
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     )
                 }
-
+                
                 Spacer(modifier = Modifier.height(8.dp))
-
+                
                 Button(
                     onClick = onDetailClick,
                     shape = RoundedCornerShape(8.dp),

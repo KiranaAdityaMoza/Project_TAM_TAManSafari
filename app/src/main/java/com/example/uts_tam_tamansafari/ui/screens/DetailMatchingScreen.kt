@@ -2,7 +2,6 @@ package com.example.uts_tam_tamansafari.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,8 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.uts_tam_tamansafari.R
@@ -88,13 +85,13 @@ fun DetailMatchingScreen(
                         contentScale = ContentScale.Crop
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    Column(){
+                    Column {
                         Text(text = "Beras", fontWeight = FontWeight.Bold)
-                        Row() {
+                        Row {
                             Text(text = "Tersedia", modifier = Modifier.width(80.dp), color = Color.Gray)
                             Text(text = ": 100 kg")
                         }
-                        Row() {
+                        Row {
                             Text(text = "Harga", modifier = Modifier.width(80.dp), color = Color.Gray)
                             Text(text = ": Rp 12.000 / kg")
                         }
@@ -132,5 +129,3 @@ fun DetailInfoRow(label: String, value: String) {
         Text(text = ": $value")
     }
 }
-
-
