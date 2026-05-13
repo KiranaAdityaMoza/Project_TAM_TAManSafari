@@ -14,7 +14,6 @@ import com.example.uts_tam_tamansafari.ui.screens.*
 import com.example.uts_tam_tamansafari.ui.theme.UTS_TAM_TAManSafariTheme
 
 class MainActivity : ComponentActivity() {
-    // Main entry point: Initializing theme and navigation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
