@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens
+package com.example.uts_tam_tamansafari.ui.screens.Register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

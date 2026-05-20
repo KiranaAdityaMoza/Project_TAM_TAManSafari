@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens
+package com.example.uts_tam_tamansafari.ui.screens.Login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

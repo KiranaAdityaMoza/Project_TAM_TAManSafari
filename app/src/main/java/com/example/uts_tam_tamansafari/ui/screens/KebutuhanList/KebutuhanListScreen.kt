@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens
+package com.example.uts_tam_tamansafari.ui.screens.KebutuhanList
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.uts_tam_tamansafari.R
+import com.example.uts_tam_tamansafari.ui.navigation.BottomNavigationBar
+import com.example.uts_tam_tamansafari.ui.navigation.Screen
 import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
 
 data class Kebutuhan(val id: Int, val nama: String, val jumlah: String, val lokasi: String, val tanggal: String, val imageRes: Int?)
@@ -58,7 +60,10 @@ fun KebutuhanListScreen(
             )
         },
         bottomBar = {
-            BottomNavigationBar(currentRoute = Screen.KebutuhanList.route, onNavigateTo = onNavigateTo)
+            BottomNavigationBar(
+                currentRoute = Screen.KebutuhanList.route,
+                onNavigateTo = onNavigateTo
+            )
         }
     ) { paddingValues ->
         // Tab filter (ScrollableTabRow) sudah dihapus agar langsung menampilkan list

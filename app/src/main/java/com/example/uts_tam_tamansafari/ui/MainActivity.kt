@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari
+package com.example.uts_tam_tamansafari.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.uts_tam_tamansafari.ui.screens.*
+import com.example.uts_tam_tamansafari.ui.navigation.Screen
+import com.example.uts_tam_tamansafari.ui.screens.Login.LoginScreen
+import com.example.uts_tam_tamansafari.ui.screens.Dashboard.DashboardScreen
+import com.example.uts_tam_tamansafari.ui.screens.DetailKebutuhan.DetailKebutuhanScreen
+import com.example.uts_tam_tamansafari.ui.screens.DetailMatching.DetailMatchingScreen
+import com.example.uts_tam_tamansafari.ui.screens.KebutuhanList.KebutuhanListScreen
+import com.example.uts_tam_tamansafari.ui.screens.Matching.MatchingScreen
+import com.example.uts_tam_tamansafari.ui.screens.Profile.ProfileScreen
+import com.example.uts_tam_tamansafari.ui.screens.Register.RegisterScreen
+import com.example.uts_tam_tamansafari.ui.screens.StatusTransaksi.StatusTransaksiScreen
+import com.example.uts_tam_tamansafari.ui.screens.TambahKebutuhan.TambahKebutuhanScreen
 import com.example.uts_tam_tamansafari.ui.theme.UTS_TAM_TAManSafariTheme
 
 class MainActivity : ComponentActivity() {
@@ -95,7 +105,7 @@ fun AppNavigation() {
         composable(Screen.Profile.route) {
             ProfileScreen(
                 onBack = { navController.popBackStack() },
-                onLogout = { 
+                onLogout = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Dashboard.route) { inclusive = true }
                     }
