@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens
+package com.example.uts_tam_tamansafari.ui.screens.DetailKebutuhan
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -17,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.uts_tam_tamansafari.R
+import com.example.uts_tam_tamansafari.ui.screens.KebutuhanList.Kebutuhan
 import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,8 +30,22 @@ fun DetailKebutuhanScreen(
     val kebutuhan = when(kebutuhanId) {
         1 -> Kebutuhan(1, "Beras", "50 kg", "Lokasi: Jakarta", "20 Mei 2025", R.drawable.beras)
         2 -> Kebutuhan(2, "Cabai", "10 kg", "Lokasi: Bogor", "18 Mei 2025", R.drawable.cabai)
-        3 -> Kebutuhan(3, "Bawang Merah", "20 kg", "Lokasi: Depok", "15 Mei 2025", R.drawable.bawang_merah)
-        4 -> Kebutuhan(4, "Bawang Putih", "15 kg", "Lokasi: Jakarta", "14 Mei 2025", R.drawable.bawang_putih)
+        3 -> Kebutuhan(
+            3,
+            "Bawang Merah",
+            "20 kg",
+            "Lokasi: Depok",
+            "15 Mei 2025",
+            R.drawable.bawang_merah
+        )
+        4 -> Kebutuhan(
+            4,
+            "Bawang Putih",
+            "15 kg",
+            "Lokasi: Jakarta",
+            "14 Mei 2025",
+            R.drawable.bawang_putih
+        )
         5 -> Kebutuhan(5, "Tomat", "30 kg", "Lokasi: Tangerang", "12 Mei 2025", R.drawable.tomat)
         else -> Kebutuhan(1, "Beras", "50 kg", "Lokasi: Jakarta", "20 Mei 2025", R.drawable.beras)
     }

@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens
+package com.example.uts_tam_tamansafari.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

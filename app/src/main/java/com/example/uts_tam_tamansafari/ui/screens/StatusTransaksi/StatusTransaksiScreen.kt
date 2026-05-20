@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens
+package com.example.uts_tam_tamansafari.ui.screens.StatusTransaksi
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -18,7 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.uts_tam_tamansafari.R
-import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
+import com.example.uts_tam_tamansafari.ui.navigation.BottomNavigationBar
+import com.example.uts_tam_tamansafari.ui.navigation.Screen
 
 data class Transaksi(val id: Int, val nama: String, val petani: String, val status: String, val statusColor: Color, val tanggal: String, val imageRes: Int?)
 
@@ -46,7 +47,10 @@ fun StatusTransaksiScreen(
             )
         },
         bottomBar = {
-            BottomNavigationBar(currentRoute = Screen.StatusTransaksi.route, onNavigateTo = onNavigateTo)
+            BottomNavigationBar(
+                currentRoute = Screen.StatusTransaksi.route,
+                onNavigateTo = onNavigateTo
+            )
         }
     ) { paddingValues ->
         // Tab filter (Semua, Diproses, dll) dihapus agar langsung menampilkan list transaksi

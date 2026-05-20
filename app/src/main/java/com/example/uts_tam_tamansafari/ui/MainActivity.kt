@@ -1,16 +1,28 @@
-package com.example.uts_tam_tamansafari
+package com.example.uts_tam_tamansafari.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.uts_tam_tamansafari.ui.screens.*
+import com.example.uts_tam_tamansafari.data.repository.SessionManager
+import com.example.uts_tam_tamansafari.ui.navigation.Screen
+import com.example.uts_tam_tamansafari.ui.screens.Login.LoginScreen
+import com.example.uts_tam_tamansafari.ui.screens.Dashboard.DashboardScreen
+import com.example.uts_tam_tamansafari.ui.screens.DetailKebutuhan.DetailKebutuhanScreen
+import com.example.uts_tam_tamansafari.ui.screens.DetailMatching.DetailMatchingScreen
+import com.example.uts_tam_tamansafari.ui.screens.KebutuhanList.KebutuhanListScreen
+import com.example.uts_tam_tamansafari.ui.screens.Matching.MatchingScreen
+import com.example.uts_tam_tamansafari.ui.screens.Profile.ProfileScreen
+import com.example.uts_tam_tamansafari.ui.screens.Register.RegisterScreen
+import com.example.uts_tam_tamansafari.ui.screens.StatusTransaksi.StatusTransaksiScreen
+import com.example.uts_tam_tamansafari.ui.screens.TambahKebutuhan.TambahKebutuhanScreen
 import com.example.uts_tam_tamansafari.ui.theme.UTS_TAM_TAManSafariTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,11 +40,23 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val sessionManager = SessionManager(context)
 
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    val startDestination = if (sessionManager.fetchAuthToken() != null) {
+        Screen.Dashboard.route
+    } else {
+        Screen.Login.route
+    }
+
+    NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.Login.route) {
             LoginScreen(
-                onLoginClick = { navController.navigate(Screen.Dashboard.route) },
+                onNavigateToDashboard = {
+                    navController.navigate(Screen.Dashboard.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
                 onRegisterClick = { navController.navigate(Screen.Register.route) }
             )
         }
@@ -69,7 +93,7 @@ fun AppNavigation() {
             DetailKebutuhanScreen(
                 kebutuhanId = id,
                 onBack = { navController.popBackStack() },
-                onEdit = { /* Handle edit */ },
+                onEdit = { },
                 onDelete = { navController.popBackStack() }
             )
         }
@@ -95,9 +119,10 @@ fun AppNavigation() {
         composable(Screen.Profile.route) {
             ProfileScreen(
                 onBack = { navController.popBackStack() },
-                onLogout = { 
+                onLogout = {
+                    sessionManager.clearSession()
                     navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Dashboard.route) { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 },
                 onNavigateTo = { route -> navController.navigate(route) }

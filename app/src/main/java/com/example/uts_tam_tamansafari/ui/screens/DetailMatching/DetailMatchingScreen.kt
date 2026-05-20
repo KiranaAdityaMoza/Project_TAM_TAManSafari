@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens
+package com.example.uts_tam_tamansafari.ui.screens.DetailMatching
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

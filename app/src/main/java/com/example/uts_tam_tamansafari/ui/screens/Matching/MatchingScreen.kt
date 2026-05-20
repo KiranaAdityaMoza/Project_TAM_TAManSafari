@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens
+package com.example.uts_tam_tamansafari.ui.screens.Matching
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.uts_tam_tamansafari.R
+import com.example.uts_tam_tamansafari.ui.navigation.BottomNavigationBar
+import com.example.uts_tam_tamansafari.ui.navigation.Screen
 import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
 import com.example.uts_tam_tamansafari.ui.theme.LightGreen
 
