@@ -2,8 +2,10 @@ package com.example.uts_tam_tamansafari.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.uts_tam_tamansafari.R
+import com.example.uts_tam_tamansafari.data.ProdukPetani
 import com.example.uts_tam_tamansafari.data.model.Kebutuhan
 import com.example.uts_tam_tamansafari.data.repository.KebutuhanRepository
+import com.example.uts_tam_tamansafari.data.repository.Transaksi
 import kotlinx.coroutines.flow.StateFlow
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -13,6 +15,12 @@ class KebutuhanViewModel : ViewModel() {
 
     val listKebutuhan: StateFlow<List<Kebutuhan>> =
         KebutuhanRepository.listKebutuhan
+        
+    val matchingResults: StateFlow<List<ProdukPetani>> = 
+        KebutuhanRepository.matchingResults
+
+    val listTransaksi: StateFlow<List<Transaksi>> =
+        KebutuhanRepository.listTransaksi
 
     fun getImageRes(komoditas: String): Int {
         return when (komoditas) {
@@ -59,10 +67,11 @@ class KebutuhanViewModel : ViewModel() {
         KebutuhanRepository.updateKebutuhan(kebutuhan)
     }
 
-    fun matchingKebutuhan(id: Int) {
-        KebutuhanRepository.updateStatus(
-            id,
-            "Sudah Matching"
-        )
+    fun performMatching(kebutuhanId: Int) {
+        KebutuhanRepository.performMatching(kebutuhanId)
+    }
+
+    fun ajukanTransaksi(produk: ProdukPetani) {
+        KebutuhanRepository.ajukanTransaksi(produk)
     }
 }

@@ -31,6 +31,7 @@ fun DashboardScreen(
     kebutuhanViewModel: KebutuhanViewModel = viewModel()
 ) {
     val listKebutuhan by kebutuhanViewModel.listKebutuhan.collectAsState()
+    val matchingResults by kebutuhanViewModel.matchingResults.collectAsState()
 
     Scaffold(
         bottomBar = {
@@ -60,7 +61,7 @@ fun DashboardScreen(
                 )
                 StatCard(
                     title = "Total Match",
-                    value = "2",
+                    value = matchingResults.size.toString(),
                     subtitle = "Kecocokan",
                     modifier = Modifier.weight(1f),
                     color = LightGreen

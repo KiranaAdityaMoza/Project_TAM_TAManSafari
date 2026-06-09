@@ -137,7 +137,7 @@ fun DetailKebutuhanScreen(
 
                     Button(
                         onClick = {
-                            viewModel.matchingKebutuhan(kebutuhan.id)
+                            viewModel.performMatching(kebutuhan.id)
                             onMatching()
                         },
                         modifier = Modifier

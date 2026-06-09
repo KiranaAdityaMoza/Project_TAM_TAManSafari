@@ -16,11 +16,16 @@ import com.example.uts_tam_tamansafari.ui.view.*
 import com.example.uts_tam_tamansafari.ui.theme.UTS_TAM_TAManSafariTheme
 import com.example.uts_tam_tamansafari.utils.SessionManager
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.uts_tam_tamansafari.data.repository.KebutuhanRepository
 import com.example.uts_tam_tamansafari.ui.viewmodel.KebutuhanViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Inisialisasi Repository agar SharedPreferences bisa menyimpan data
+        KebutuhanRepository.init(this)
+        
         enableEdgeToEdge()
         setContent {
             UTS_TAM_TAManSafariTheme {
@@ -34,6 +39,7 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController = rememberNavController()
 
+    // ViewModel didefinisikan di sini agar bisa di-share antar layar
     val kebutuhanViewModel: KebutuhanViewModel = viewModel()
     val context = LocalContext.current
     val sessionManager = SessionManager(context)
@@ -76,7 +82,8 @@ fun AppNavigation() {
                 onBack = { navController.popBackStack() },
                 onAddClick = { navController.navigate(Screen.TambahKebutuhan.route) },
                 onItemClick = { id -> navController.navigate("${Screen.DetailKebutuhan.route}/$id") },
-                onNavigateTo = { route -> navController.navigate(route) }
+                onNavigateTo = { route -> navController.navigate(route) },
+                viewModel = kebutuhanViewModel
             )
         }
         composable(Screen.TambahKebutuhan.route) {
@@ -94,10 +101,7 @@ fun AppNavigation() {
                 }
             )
         ) { backStackEntry ->
-
-            val kebutuhanId =
-                backStackEntry.arguments?.getInt("kebutuhanId")
-
+            val kebutuhanId = backStackEntry.arguments?.getInt("kebutuhanId")
             TambahKebutuhanScreen(
                 kebutuhanId = kebutuhanId,
                 onBack = { navController.popBackStack() },
@@ -116,26 +120,43 @@ fun AppNavigation() {
                 onBack = { navController.popBackStack() },
                 onEdit = { navController.navigate("edit_kebutuhan/$id") },
                 onDelete = { navController.popBackStack() },
-                onMatching = { navController.navigate(Screen.Matching.route) }
+                onMatching = { navController.navigate(Screen.Matching.route) },
+                viewModel = kebutuhanViewModel
             )
         }
         composable(Screen.Matching.route) {
             MatchingScreen(
                 onBack = { navController.popBackStack() },
-                onDetailClick = { id -> navController.navigate(Screen.DetailMatching.route) },
-                onNavigateTo = { route -> navController.navigate(route) }
+                onDetailClick = { id -> navController.navigate("${Screen.DetailMatching.route}/$id") },
+                onNavigateTo = { route -> navController.navigate(route) },
+                viewModel = kebutuhanViewModel
             )
         }
-        composable(Screen.DetailMatching.route) {
+        
+        // Update rute Detail Matching agar menerima ID produk
+        composable(
+            route = "${Screen.DetailMatching.route}/{produkId}",
+            arguments = listOf(navArgument("produkId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val produkId = backStackEntry.arguments?.getInt("produkId") ?: 0
             DetailMatchingScreen(
+                produkId = produkId,
                 onBack = { navController.popBackStack() },
-                onAjukanTransaksi = { navController.navigate(Screen.StatusTransaksi.route) }
+                onAjukanTransaksi = { 
+                    navController.navigate(Screen.StatusTransaksi.route) {
+                        // Agar saat di status transaksi klik back tidak balik ke detail matching lagi
+                        popUpTo(Screen.Matching.route) { inclusive = false }
+                    }
+                },
+                viewModel = kebutuhanViewModel
             )
         }
+
         composable(Screen.StatusTransaksi.route) {
             StatusTransaksiScreen(
                 onBack = { navController.popBackStack() },
-                onNavigateTo = { route -> navController.navigate(route) }
+                onNavigateTo = { route -> navController.navigate(route) },
+                viewModel = kebutuhanViewModel
             )
         }
         composable(Screen.Profile.route) {
