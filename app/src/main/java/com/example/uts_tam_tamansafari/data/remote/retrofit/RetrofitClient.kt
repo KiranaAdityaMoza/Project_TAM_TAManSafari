@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://distriagri-api.free.beeceptor.com/"
+    private const val BASE_URL = "https://dummyjson.com/"
 
     val authApi: AuthApi by lazy {
         Retrofit.Builder()

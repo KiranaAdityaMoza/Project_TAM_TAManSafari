@@ -8,17 +8,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.uts_tam_tamansafari.R
 import com.example.uts_tam_tamansafari.ui.navigation.BottomNavigationBar
 import com.example.uts_tam_tamansafari.ui.navigation.Screen
+import com.example.uts_tam_tamansafari.utils.SessionManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +30,9 @@ fun ProfileScreen(
     onLogout: () -> Unit,
     onNavigateTo: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    val sessionManager = remember { SessionManager(context) }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -58,13 +64,13 @@ fun ProfileScreen(
             
             Spacer(modifier = Modifier.height(32.dp))
             
-            ProfileItem(label = "Nama", value = "Pembeli 1")
+            ProfileItem(label = "Nama", value = sessionManager.getFullName() ?: "User Name")
+            HorizontalDivider()
+            ProfileItem(label = "Username", value = sessionManager.getUserName() ?: "User")
+            HorizontalDivider()
+            ProfileItem(label = "Email", value = sessionManager.getEmail() ?: "user@mail.com")
             HorizontalDivider()
             ProfileItem(label = "Role", value = "Pembeli")
-            HorizontalDivider()
-            ProfileItem(label = "No. HP", value = "0812-3456-7890")
-            HorizontalDivider()
-            ProfileItem(label = "Email", value = "pembeli1@email.com")
             
             Spacer(modifier = Modifier.height(48.dp))
             

@@ -5,10 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.uts_tam_tamansafari.data.model.LoginRequest
 import com.example.uts_tam_tamansafari.data.repository.Repository
+import com.example.uts_tam_tamansafari.data.repository.Resource
 import com.example.uts_tam_tamansafari.ui.view.LoginUiState
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 class LoginViewModel : ViewModel() {
     private val repository = Repository()
@@ -18,15 +20,24 @@ class LoginViewModel : ViewModel() {
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
-            uiState = LoginUiState.Loading
-            try {
-                val response = repository.login(username.trim(), password.trim())
-                uiState = LoginUiState.Success(response.token)
-            } catch (e: HttpException) {
-                uiState = LoginUiState.Error("Username atau password salah (HTTP ${e.code()})")
-            } catch (e: Exception) {
-                uiState = LoginUiState.Error(e.localizedMessage ?: "Terjadi kesalahan koneksi")
+            repository.login(LoginRequest(username.trim(), password.trim())).collectLatest { resource ->
+                uiState = when (resource) {
+                    is Resource.Loading -> LoginUiState.Loading
+                    is Resource.Success -> {
+                        LoginUiState.Success(
+                            token = resource.data.token,
+                            username = resource.data.username,
+                            firstName = resource.data.firstName,
+                            lastName = resource.data.lastName
+                        )
+                    }
+                    is Resource.Error -> LoginUiState.Error(resource.message)
+                }
             }
         }
+    }
+
+    fun resetState() {
+        uiState = LoginUiState.Idle
     }
 }

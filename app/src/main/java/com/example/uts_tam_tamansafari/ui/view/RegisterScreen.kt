@@ -1,5 +1,6 @@
 package com.example.uts_tam_tamansafari.ui.view
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,22 +13,49 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
+import com.example.uts_tam_tamansafari.ui.viewmodel.RegisterUiState
+import com.example.uts_tam_tamansafari.ui.viewmodel.RegisterViewModel
+import com.example.uts_tam_tamansafari.utils.SessionManager
 
 @Composable
 fun RegisterScreen(
-    onRegisterClick: () -> Unit,
-    onLoginClick: () -> Unit
+    onRegisterSuccess: () -> Unit,
+    onLoginClick: () -> Unit,
+    viewModel: RegisterViewModel = viewModel()
 ) {
-    var name by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+    val sessionManager = remember { SessionManager(context) }
+    val uiState = viewModel.uiState
+
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is RegisterUiState.Success -> {
+                sessionManager.saveLocalRegister(username.trim(), password.trim(), email.trim())
+                Toast.makeText(context, "Registrasi Berhasil!", Toast.LENGTH_SHORT).show()
+                onRegisterSuccess()
+                viewModel.resetState()
+            }
+            is RegisterUiState.Error -> {
+                Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+                viewModel.resetState()
+            }
+            else -> {}
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -43,9 +71,11 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        CustomInputField(value = name, onValueChange = { name = it }, placeholder = "Nama Lengkap", icon = Icons.Default.Person)
+        CustomInputField(value = firstName, onValueChange = { firstName = it }, placeholder = "Nama Depan", icon = Icons.Default.Person)
         Spacer(modifier = Modifier.height(16.dp))
-        CustomInputField(value = phone, onValueChange = { phone = it }, placeholder = "Nomor HP", icon = Icons.Default.Phone)
+        CustomInputField(value = lastName, onValueChange = { lastName = it }, placeholder = "Nama Belakang", icon = Icons.Default.Person)
+        Spacer(modifier = Modifier.height(16.dp))
+        CustomInputField(value = username, onValueChange = { username = it }, placeholder = "Username", icon = Icons.Default.AccountCircle)
         Spacer(modifier = Modifier.height(16.dp))
         CustomInputField(value = email, onValueChange = { email = it }, placeholder = "Email", icon = Icons.Default.Email)
         Spacer(modifier = Modifier.height(16.dp))
@@ -54,12 +84,24 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(40.dp))
 
         Button(
-            onClick = onRegisterClick,
+            onClick = {
+                if (username.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
+                    sessionManager.saveLocalRegister(username.trim(), password.trim(), email.trim())
+                    viewModel.register(username.trim(), email.trim(), password.trim(), firstName.trim(), lastName.trim())
+                } else {
+                    Toast.makeText(context, "Isi semua bidang!", Toast.LENGTH_SHORT).show()
+                }
+            },
             modifier = Modifier.fillMaxWidth().height(55.dp),
+            enabled = uiState !is RegisterUiState.Loading,
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
         ) {
-            Text("Daftar", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            if (uiState is RegisterUiState.Loading) {
+                CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+            } else {
+                Text("Daftar", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))

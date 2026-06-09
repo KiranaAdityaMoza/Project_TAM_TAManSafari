@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +25,12 @@ import com.example.uts_tam_tamansafari.ui.viewmodel.LoginViewModel
 sealed class LoginUiState {
     object Idle : LoginUiState()
     object Loading : LoginUiState()
-    data class Success(val token: String) : LoginUiState()
+    data class Success(
+        val token: String,
+        val username: String,
+        val firstName: String,
+        val lastName: String
+    ) : LoginUiState()
     data class Error(val message: String) : LoginUiState()
 }
 
@@ -47,11 +51,17 @@ fun LoginScreen(
         when (uiState) {
             is LoginUiState.Success -> {
                 sessionManager.saveAuthToken(uiState.token)
+                sessionManager.saveUserDetail(
+                    username = uiState.username,
+                    fullName = "${uiState.firstName} ${uiState.lastName}"
+                )
                 Toast.makeText(context, "Login Berhasil!", Toast.LENGTH_SHORT).show()
                 onNavigateToDashboard()
+                viewModel.resetState()
             }
             is LoginUiState.Error -> {
                 Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+                viewModel.resetState()
             }
             else -> {}
         }
@@ -75,7 +85,7 @@ fun LoginScreen(
                 contentDescription = "Logo",
                 modifier = Modifier.size(150.dp).clip(RoundedCornerShape(16.dp))
             )
-            
+
             Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
@@ -100,12 +110,23 @@ fun LoginScreen(
             Button(
                 onClick = {
                     if (username.isNotEmpty() && password.isNotEmpty()) {
-                        viewModel.login(username, password)
+                        val trimmedUser = username.trim()
+                        val trimmedPass = password.trim()
+
+                        if (trimmedUser == sessionManager.getLocalUsername() && trimmedPass == sessionManager.getLocalPassword()) {
+                            sessionManager.saveAuthToken("mock_local_token_distriagri")
+                            sessionManager.saveUserDetail(trimmedUser, trimmedUser)
+                            Toast.makeText(context, "Login Berhasil!", Toast.LENGTH_SHORT).show()
+                            onNavigateToDashboard()
+                        } else {
+                            viewModel.login(trimmedUser, trimmedPass)
+                        }
                     } else {
                         Toast.makeText(context, "Isi semua bidang!", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth().height(50.dp),
+                enabled = uiState !is LoginUiState.Loading,
                 colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
             ) {
                 if (uiState is LoginUiState.Loading) {
@@ -113,6 +134,12 @@ fun LoginScreen(
                 } else {
                     Text("Login", color = Color.White)
                 }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextButton(onClick = onRegisterClick) {
+                Text("Belum punya akun? Daftar di sini", color = GreenPrimary)
             }
         }
     }

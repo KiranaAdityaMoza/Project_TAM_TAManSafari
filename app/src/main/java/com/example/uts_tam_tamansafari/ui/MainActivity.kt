@@ -34,7 +34,7 @@ fun AppNavigation() {
     val context = LocalContext.current
     val sessionManager = SessionManager(context)
 
-    val startDestination = if (sessionManager.fetchAuthToken() != null) {
+    val startDestination = if (sessionManager.isLoggedIn()) {
         Screen.Dashboard.route
     } else {
         Screen.Login.route
@@ -53,7 +53,11 @@ fun AppNavigation() {
         }
         composable(Screen.Register.route) {
             RegisterScreen(
-                onRegisterClick = { navController.navigate(Screen.Login.route) },
+                onRegisterSuccess = { 
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Register.route) { inclusive = true }
+                    }
+                },
                 onLoginClick = { navController.navigate(Screen.Login.route) }
             )
         }
@@ -111,7 +115,7 @@ fun AppNavigation() {
             ProfileScreen(
                 onBack = { navController.popBackStack() },
                 onLogout = {
-                    sessionManager.clearSession()
+                    sessionManager.logout()
                     navController.navigate(Screen.Login.route) {
                         popUpTo(0) { inclusive = true }
                     }
