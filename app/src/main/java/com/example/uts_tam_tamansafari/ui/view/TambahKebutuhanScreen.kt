@@ -20,23 +20,56 @@ import com.example.uts_tam_tamansafari.ui.viewmodel.KebutuhanViewModel
 fun TambahKebutuhanScreen(
     onBack: () -> Unit,
     onSimpan: () -> Unit,
+    kebutuhanId: Int? = null,
     viewModel: KebutuhanViewModel = viewModel()
 ) {
-    var selectedKomoditas by remember { mutableStateOf("Pilih Komoditas") }
-    var jumlah by remember { mutableStateOf("") }
-    var lokasi by remember { mutableStateOf("") }
-    var catatan by remember { mutableStateOf("") }
+    val listKebutuhan by viewModel.listKebutuhan.collectAsState()
+    val kebutuhan = listKebutuhan.find { it.id == kebutuhanId }
+
+    var selectedKomoditas by remember {
+        mutableStateOf(kebutuhan?.komoditas ?: "Pilih Komoditas")
+    }
+
+    var jumlah by remember {
+        mutableStateOf(kebutuhan?.jumlah ?: "")
+    }
+
+    var lokasi by remember {
+        mutableStateOf(kebutuhan?.lokasi ?: "")
+    }
+
+    var catatan by remember {
+        mutableStateOf(kebutuhan?.catatan ?: "")
+    }
+
     var expanded by remember { mutableStateOf(false) }
 
-    val komoditasOptions = listOf("Beras", "Cabai", "Bawang Merah", "Bawang Putih", "Tomat")
+    val komoditasOptions = listOf(
+        "Beras",
+        "Cabai",
+        "Bawang Merah",
+        "Bawang Putih",
+        "Tomat"
+    )
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Tambah Kebutuhan", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        if (kebutuhanId == null)
+                            "Tambah Kebutuhan"
+                        else
+                            "Edit Kebutuhan",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
                     }
                 }
             )
@@ -111,15 +144,45 @@ fun TambahKebutuhanScreen(
             Button(
                 onClick = {
                     if (selectedKomoditas != "Pilih Komoditas" && jumlah.isNotEmpty()) {
-                        viewModel.tambahKebutuhan(selectedKomoditas, jumlah, lokasi, catatan)
+
+                        if (kebutuhanId == null) {
+
+                            viewModel.tambahKebutuhan(
+                                selectedKomoditas,
+                                jumlah,
+                                lokasi,
+                                catatan
+                            )
+
+                        } else {
+
+                            viewModel.updateKebutuhan(
+                                kebutuhan!!.copy(
+                                    komoditas = selectedKomoditas,
+                                    jumlah = jumlah,
+                                    lokasi = lokasi,
+                                    catatan = catatan,
+                                    imageRes = viewModel.getImageRes(selectedKomoditas)
+                                )
+                            )
+                        }
+
                         onSimpan()
                     }
                 },
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = GreenPrimary
+                )
             ) {
-                Text("Simpan", fontSize = 16.sp, color = Color.White)
+                Text(
+                    if (kebutuhanId == null) "Simpan" else "Update",
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
             }
         }
     }

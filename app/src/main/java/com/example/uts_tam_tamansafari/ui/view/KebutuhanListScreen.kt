@@ -97,19 +97,46 @@ fun KebutuhanItem(item: Kebutuhan, onClick: () -> Unit) {
                 color = Color.LightGray
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.logo_distriagri),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit
+                    painter = painterResource(id = item.imageRes),
+                    contentDescription = item.komoditas,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = item.komoditas, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                Text(text = item.jumlah, fontWeight = FontWeight.Bold, color = GreenPrimary)
-                Text(text = item.lokasi, fontSize = 12.sp, color = Color.Gray)
-                Text(text = item.status, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFFFA500))
+                Text(
+                    text = item.komoditas,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+
+                Text(
+                    text = "${item.jumlah} kg",
+                    fontWeight = FontWeight.Bold,
+                    color = GreenPrimary
+                )
+
+                Text(
+                    text = "Lokasi: ${item.lokasi}",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
+
+                Text(
+                    text = item.tanggal,
+                    fontSize = 11.sp,
+                    color = Color.Gray
+                )
+
+                Text(
+                    text = item.status,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFFA500)
+                )
             }
             
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.Gray)

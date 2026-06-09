@@ -15,6 +15,8 @@ import com.example.uts_tam_tamansafari.ui.navigation.Screen
 import com.example.uts_tam_tamansafari.ui.view.*
 import com.example.uts_tam_tamansafari.ui.theme.UTS_TAM_TAManSafariTheme
 import com.example.uts_tam_tamansafari.utils.SessionManager
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.uts_tam_tamansafari.ui.viewmodel.KebutuhanViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +33,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+
+    val kebutuhanViewModel: KebutuhanViewModel = viewModel()
     val context = LocalContext.current
     val sessionManager = SessionManager(context)
 
@@ -63,7 +67,8 @@ fun AppNavigation() {
         }
         composable(Screen.Dashboard.route) {
             DashboardScreen(
-                onNavigateTo = { route -> navController.navigate(route) }
+                onNavigateTo = { route -> navController.navigate(route) },
+                kebutuhanViewModel = kebutuhanViewModel
             )
         }
         composable(Screen.KebutuhanList.route) {
@@ -77,9 +82,30 @@ fun AppNavigation() {
         composable(Screen.TambahKebutuhan.route) {
             TambahKebutuhanScreen(
                 onBack = { navController.popBackStack() },
-                onSimpan = { navController.popBackStack() }
+                onSimpan = { navController.popBackStack() },
+                viewModel = kebutuhanViewModel
             )
         }
+
+        composable( route = "edit_kebutuhan/{kebutuhanId}",
+            arguments = listOf(
+                navArgument("kebutuhanId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+
+            val kebutuhanId =
+                backStackEntry.arguments?.getInt("kebutuhanId")
+
+            TambahKebutuhanScreen(
+                kebutuhanId = kebutuhanId,
+                onBack = { navController.popBackStack() },
+                onSimpan = { navController.popBackStack() },
+                viewModel = kebutuhanViewModel
+            )
+        }
+
         composable(
             route = "${Screen.DetailKebutuhan.route}/{kebutuhanId}",
             arguments = listOf(navArgument("kebutuhanId") { type = NavType.IntType })
@@ -88,8 +114,9 @@ fun AppNavigation() {
             DetailKebutuhanScreen(
                 kebutuhanId = id,
                 onBack = { navController.popBackStack() },
-                onEdit = { },
-                onDelete = { navController.popBackStack() }
+                onEdit = { navController.navigate("edit_kebutuhan/$id") },
+                onDelete = { navController.popBackStack() },
+                onMatching = { navController.navigate(Screen.Matching.route) }
             )
         }
         composable(Screen.Matching.route) {

@@ -20,6 +20,7 @@ sealed class Screen(val route: String) {
     object KebutuhanList : Screen("kebutuhan_list")
     object TambahKebutuhan : Screen("tambah_kebutuhan")
     object DetailKebutuhan : Screen("detail_kebutuhan")
+    object EditKebutuhan : Screen("edit_kebutuhan")
     object Matching : Screen("matching")
     object DetailMatching : Screen("detail_matching")
     object StatusTransaksi : Screen("status_transaksi")

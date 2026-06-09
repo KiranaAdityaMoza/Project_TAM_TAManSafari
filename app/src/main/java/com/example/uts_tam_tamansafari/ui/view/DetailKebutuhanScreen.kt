@@ -29,8 +29,9 @@ fun DetailKebutuhanScreen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
+    onMatching: () -> Unit,
     viewModel: KebutuhanViewModel = viewModel()
-) {
+){
     val listKebutuhan by viewModel.listKebutuhan.collectAsState()
     val kebutuhan = listKebutuhan.find { it.id == kebutuhanId }
 
@@ -64,16 +65,17 @@ fun DetailKebutuhanScreen(
                         color = Color.LightGray
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.logo_distriagri),
+                            painter = painterResource(id = kebutuhan.imageRes),
                             contentDescription = null,
                             contentScale = ContentScale.Fit
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
-                        Text(text = kebutuhan.komoditas, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                        Text(text = kebutuhan.jumlah, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = GreenPrimary)
-                        Text(text = kebutuhan.lokasi, color = Color.Gray)
+                        Text(text = kebutuhan.komoditas,fontSize = 20.sp,fontWeight = FontWeight.Bold)
+                        Text(text = "${kebutuhan.jumlah} kg",fontSize = 18.sp,fontWeight = FontWeight.Bold,color = GreenPrimary)
+                        Text(text = "Lokasi: ${kebutuhan.lokasi}",color = Color.Gray)
+                        Text(text = "Tanggal: ${kebutuhan.tanggal}",fontSize = 12.sp,color = Color.Gray)
                         Text(text = "Status: ${kebutuhan.status}", fontSize = 12.sp, color = Color(0xFFFFA500), fontWeight = FontWeight.Bold)
                     }
                 }
@@ -95,25 +97,58 @@ fun DetailKebutuhanScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = onDelete,
-                        modifier = Modifier.weight(1f).height(50.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Hapus")
+
+                        OutlinedButton(
+                            onClick = {
+                                if (kebutuhan.status == "Mencari Petani") {
+                                    viewModel.hapusKebutuhan(kebutuhan.id)
+                                    onDelete()
+                                }
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Hapus")
+                        }
+
+                        Button(
+                            onClick = {
+                                if (kebutuhan.status == "Mencari Petani") {
+                                    onEdit()
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = kebutuhan.status == "Mencari Petani",
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = GreenPrimary
+                            )
+                        ) {
+                            Text("Edit")
+                        }
                     }
+
                     Button(
-                        onClick = onEdit,
-                        modifier = Modifier.weight(1f).height(50.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                        onClick = {
+                            viewModel.matchingKebutuhan(kebutuhan.id)
+                            onMatching()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        enabled = kebutuhan.status == "Mencari Petani",
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = GreenPrimary
+                        )
                     ) {
-                        Text("Edit", color = Color.White)
+                        Text("Matching")
                     }
                 }
             }

@@ -6,5 +6,7 @@ data class Kebutuhan(
     val jumlah: String,
     val lokasi: String,
     val catatan: String,
+    val tanggal: String,
+    val imageRes: Int,
     val status: String = "Mencari Petani"
 )

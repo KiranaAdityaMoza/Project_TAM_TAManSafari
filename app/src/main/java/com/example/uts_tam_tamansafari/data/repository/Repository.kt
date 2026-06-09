@@ -14,13 +14,6 @@ import kotlinx.coroutines.flow.flow
 class Repository {
     private val api = RetrofitClient.instance
 
-    // Simulasi database lokal untuk Kebutuhan (Data Dummy)
-    private val _listKebutuhan = MutableStateFlow(mutableListOf(
-        Kebutuhan(1, "Beras", "100kg", "Pasar Rebo", "Butuh cepat"),
-        Kebutuhan(2, "Cabai Merah", "20kg", "Bogor", "Kualitas premium")
-    ))
-    val listKebutuhan: StateFlow<List<Kebutuhan>> = _listKebutuhan
-
     fun login(request: LoginRequest) = flow {
         emit(Resource.Loading)
         try {
@@ -41,9 +34,4 @@ class Repository {
         }
     }
 
-    fun addKebutuhan(kebutuhan: Kebutuhan) {
-        val currentList = _listKebutuhan.value.toMutableList()
-        currentList.add(kebutuhan)
-        _listKebutuhan.value = currentList
-    }
 }
