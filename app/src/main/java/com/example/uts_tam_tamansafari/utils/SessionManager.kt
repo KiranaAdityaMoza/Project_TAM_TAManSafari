@@ -13,10 +13,17 @@ class SessionManager(context: Context) {
         private const val KEY_LOCAL_PASS = "local_password"
         private const val KEY_LOCAL_EMAIL = "local_email"
         private const val KEY_USER_DETAIL_NAME = "user_detail_name"
+        private const val KEY_LOGIN_TIMESTAMP = "login_timestamp"
+
+        private const val SESSION_DURATION = 30L * 24L * 60L * 60L * 1000L
     }
 
     fun saveAuthToken(token: String) {
-        prefs.edit().putString(KEY_TOKEN, token).putBoolean(KEY_IS_LOGIN, true).apply()
+        prefs.edit()
+            .putString(KEY_TOKEN, token)
+            .putBoolean(KEY_IS_LOGIN, true)
+            .putLong(KEY_LOGIN_TIMESTAMP, System.currentTimeMillis())
+            .apply()
     }
 
     fun saveUserDetail(username: String, fullName: String) {
@@ -37,9 +44,26 @@ class SessionManager(context: Context) {
     fun getUserName(): String? = prefs.getString(KEY_LOCAL_USER, "Username")
     fun getEmail(): String? = prefs.getString(KEY_LOCAL_EMAIL, "user@distriagri.com")
 
-    fun isLoggedIn(): Boolean = prefs.getBoolean(KEY_IS_LOGIN, false)
+    fun isLoggedIn(): Boolean {
+        val isLogin = prefs.getBoolean(KEY_IS_LOGIN, false)
+        if (!isLogin) return false
+
+        val loginTime = prefs.getLong(KEY_LOGIN_TIMESTAMP, 0L)
+        val currentTime = System.currentTimeMillis()
+
+        if ((currentTime - loginTime) > SESSION_DURATION) {
+            logout()
+            return false
+        }
+
+        return true
+    }
 
     fun logout() {
-        prefs.edit().clear().apply()
+        prefs.edit()
+            .remove(KEY_TOKEN)
+            .remove(KEY_LOGIN_TIMESTAMP)
+            .putBoolean(KEY_IS_LOGIN, false)
+            .apply()
     }
 }
