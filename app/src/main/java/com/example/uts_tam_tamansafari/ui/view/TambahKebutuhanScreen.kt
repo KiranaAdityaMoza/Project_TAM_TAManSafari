@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens.TambahKebutuhan
+package com.example.uts_tam_tamansafari.ui.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,13 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
+import com.example.uts_tam_tamansafari.ui.viewmodel.KebutuhanViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TambahKebutuhanScreen(
     onBack: () -> Unit,
-    onSimpan: () -> Unit
+    onSimpan: () -> Unit,
+    viewModel: KebutuhanViewModel = viewModel()
 ) {
     var selectedKomoditas by remember { mutableStateOf("Pilih Komoditas") }
     var jumlah by remember { mutableStateOf("") }
@@ -106,7 +109,12 @@ fun TambahKebutuhanScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = onSimpan,
+                onClick = {
+                    if (selectedKomoditas != "Pilih Komoditas" && jumlah.isNotEmpty()) {
+                        viewModel.tambahKebutuhan(selectedKomoditas, jumlah, lokasi, catatan)
+                        onSimpan()
+                    }
+                },
                 modifier = Modifier.fillMaxWidth().height(50.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)

@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens.StatusTransaksi
+package com.example.uts_tam_tamansafari.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -21,7 +21,7 @@ import com.example.uts_tam_tamansafari.R
 import com.example.uts_tam_tamansafari.ui.navigation.BottomNavigationBar
 import com.example.uts_tam_tamansafari.ui.navigation.Screen
 
-data class Transaksi(val id: Int, val nama: String, val petani: String, val status: String, val statusColor: Color, val tanggal: String, val imageRes: Int?)
+data class Transaksi(val id: Int, val nama: String, val petani: String, val status: String, val statusColor: Color, val tanggal: String)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,9 +30,9 @@ fun StatusTransaksiScreen(
     onNavigateTo: (String) -> Unit
 ) {
     val transaksiList = listOf(
-        Transaksi(1, "Beras - 50 kg", "Petani A", "Diproses", Color(0xFF2196F3), "21 Mei 2025", R.drawable.beras),
-        Transaksi(2, "Cabai - 10 kg", "Petani C", "Disetujui", Color(0xFFFF9800), "20 Mei 2025", R.drawable.cabai),
-        Transaksi(3, "Bawang Merah - 20 kg", "Petani D", "Selesai", Color(0xFF4CAF50), "18 Mei 2025", R.drawable.bawang_merah)
+        Transaksi(1, "Beras - 50 kg", "Petani A", "Diproses", Color(0xFF2196F3), "21 Mei 2025"),
+        Transaksi(2, "Cabai - 10 kg", "Petani C", "Disetujui", Color(0xFFFF9800), "20 Mei 2025"),
+        Transaksi(3, "Bawang Merah - 20 kg", "Petani D", "Selesai", Color(0xFF4CAF50), "18 Mei 2025")
     )
 
     Scaffold(
@@ -53,7 +53,6 @@ fun StatusTransaksiScreen(
             )
         }
     ) { paddingValues ->
-        // Tab filter (Semua, Diproses, dll) dihapus agar langsung menampilkan list transaksi
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -86,13 +85,11 @@ fun TransaksiItem(transaksi: Transaksi) {
                 shape = RoundedCornerShape(8.dp),
                 color = Color.LightGray
             ) {
-                transaksi.imageRes?.let {
-                    Image(
-                        painter = painterResource(id = it),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop
-                    )
-                }
+                Image(
+                    painter = painterResource(id = R.drawable.logo_distriagri),
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit
+                )
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {

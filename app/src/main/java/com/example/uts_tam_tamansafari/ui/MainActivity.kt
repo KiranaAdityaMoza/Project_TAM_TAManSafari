@@ -11,19 +11,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.uts_tam_tamansafari.data.repository.SessionManager
 import com.example.uts_tam_tamansafari.ui.navigation.Screen
-import com.example.uts_tam_tamansafari.ui.screens.Login.LoginScreen
-import com.example.uts_tam_tamansafari.ui.screens.Dashboard.DashboardScreen
-import com.example.uts_tam_tamansafari.ui.screens.DetailKebutuhan.DetailKebutuhanScreen
-import com.example.uts_tam_tamansafari.ui.screens.DetailMatching.DetailMatchingScreen
-import com.example.uts_tam_tamansafari.ui.screens.KebutuhanList.KebutuhanListScreen
-import com.example.uts_tam_tamansafari.ui.screens.Matching.MatchingScreen
-import com.example.uts_tam_tamansafari.ui.screens.Profile.ProfileScreen
-import com.example.uts_tam_tamansafari.ui.screens.Register.RegisterScreen
-import com.example.uts_tam_tamansafari.ui.screens.StatusTransaksi.StatusTransaksiScreen
-import com.example.uts_tam_tamansafari.ui.screens.TambahKebutuhan.TambahKebutuhanScreen
+import com.example.uts_tam_tamansafari.ui.view.*
 import com.example.uts_tam_tamansafari.ui.theme.UTS_TAM_TAManSafariTheme
+import com.example.uts_tam_tamansafari.utils.SessionManager
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +91,7 @@ fun AppNavigation() {
         composable(Screen.Matching.route) {
             MatchingScreen(
                 onBack = { navController.popBackStack() },
-                onDetailClick = { _ -> navController.navigate(Screen.DetailMatching.route) },
+                onDetailClick = { id -> navController.navigate(Screen.DetailMatching.route) },
                 onNavigateTo = { route -> navController.navigate(route) }
             )
         }

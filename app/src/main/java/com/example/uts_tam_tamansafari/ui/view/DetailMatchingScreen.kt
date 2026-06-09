@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens.DetailMatching
+package com.example.uts_tam_tamansafari.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -47,12 +47,12 @@ fun DetailMatchingScreen(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.petani_cowo),
+                    painter = painterResource(id = R.drawable.logo_distriagri),
                     contentDescription = "Foto Petani",
                     modifier = Modifier
                         .size(60.dp)
                         .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Fit
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
@@ -77,12 +77,12 @@ fun DetailMatchingScreen(
             ) {
                 Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                     Image(
-                        painter = painterResource(id = R.drawable.beras),
-                        contentDescription = "Foto Beras",
+                        painter = painterResource(id = R.drawable.logo_distriagri),
+                        contentDescription = "Foto Produk",
                         modifier = Modifier
                             .size(50.dp)
                             .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Fit
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
@@ -99,15 +99,6 @@ fun DetailMatchingScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(text = "Informasi Lain", fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                DetailInfoRow(label = "Jarak", value = "15 km dari lokasi Anda")
-                DetailInfoRow(label = "Catatan", value = "Beras kualitas premium")
-            }
-
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
@@ -119,13 +110,5 @@ fun DetailMatchingScreen(
                 Text("Ajukan Transaksi", color = Color.White)
             }
         }
-    }
-}
-
-@Composable
-fun DetailInfoRow(label: String, value: String) {
-    Row {
-        Text(text = label, modifier = Modifier.width(80.dp), color = Color.Gray)
-        Text(text = ": $value")
     }
 }

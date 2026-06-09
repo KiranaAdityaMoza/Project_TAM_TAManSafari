@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens.Matching
+package com.example.uts_tam_tamansafari.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -23,7 +23,7 @@ import com.example.uts_tam_tamansafari.ui.navigation.Screen
 import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
 import com.example.uts_tam_tamansafari.ui.theme.LightGreen
 
-data class MatchingResult(val id: Int, val nama: String, val petani: String, val tersedia: String, val lokasi: String, val imageRes: Int?)
+data class MatchingResult(val id: Int, val nama: String, val petani: String, val tersedia: String, val lokasi: String)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,11 +33,9 @@ fun MatchingScreen(
     onNavigateTo: (String) -> Unit
 ) {
     val matchingResults = listOf(
-        MatchingResult(1, "Beras", "Petani A", "Tersedia: 100 kg", "Lokasi: Bekasi", R.drawable.beras),
-        MatchingResult(2, "Bawang Putih", "Petani B", "Tersedia: 30 kg", "Lokasi: Karawang", R.drawable.bawang_putih),
-        MatchingResult(3, "Cabai", "Petani C", "Tersedia: 50 kg", "Lokasi: Bogor", R.drawable.cabai),
-        MatchingResult(4, "Bawang Merah", "Petani D", "Tersedia: 40 kg", "Lokasi: Brebes", R.drawable.bawang_merah),
-        MatchingResult(5, "Tomat", "Petani E", "Tersedia: 60 kg", "Lokasi: Garut", R.drawable.tomat)
+        MatchingResult(1, "Beras", "Petani A", "Tersedia: 100 kg", "Lokasi: Bekasi"),
+        MatchingResult(2, "Bawang Putih", "Petani B", "Tersedia: 30 kg", "Lokasi: Karawang"),
+        MatchingResult(3, "Cabai", "Petani C", "Tersedia: 50 kg", "Lokasi: Bogor")
     )
 
     Scaffold(
@@ -86,13 +84,11 @@ fun MatchingItem(result: MatchingResult, onDetailClick: () -> Unit) {
                 shape = RoundedCornerShape(8.dp),
                 color = Color.LightGray
             ) {
-                result.imageRes?.let {
-                    Image(
-                        painter = painterResource(id = it),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop
-                    )
-                }
+                Image(
+                    painter = painterResource(id = R.drawable.logo_distriagri),
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit
+                )
             }
             
             Spacer(modifier = Modifier.width(16.dp))
@@ -104,31 +100,13 @@ fun MatchingItem(result: MatchingResult, onDetailClick: () -> Unit) {
                 Text(text = result.lokasi, fontSize = 12.sp, color = Color.Gray)
             }
             
-            Spacer(modifier = Modifier.width(8.dp))
-            
             Column(horizontalAlignment = Alignment.End) {
-                Surface(
-                    color = LightGreen,
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text(
-                        text = "Cocok",
-                        color = GreenPrimary,
-                        fontSize = 10.sp,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                    )
+                Surface(color = LightGreen, shape = RoundedCornerShape(4.dp)) {
+                    Text(text = "Cocok", color = GreenPrimary, fontSize = 10.sp, modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp))
                 }
-                
                 Spacer(modifier = Modifier.height(8.dp))
-                
-                Button(
-                    onClick = onDetailClick,
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                    modifier = Modifier.height(32.dp)
-                ) {
-                    Text("Lihat Detail", fontSize = 10.sp, color = Color.White)
+                Button(onClick = onDetailClick, shape = RoundedCornerShape(8.dp), colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary), modifier = Modifier.height(32.dp)) {
+                    Text("Detail", fontSize = 10.sp, color = Color.White)
                 }
             }
         }

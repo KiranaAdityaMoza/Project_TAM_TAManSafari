@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens.Profile
+package com.example.uts_tam_tamansafari.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -49,13 +49,10 @@ fun ProfileScreen(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Profile Image
             Image(
                 painter = painterResource(id = R.drawable.profil),
                 contentDescription = "Foto Profil",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape),
+                modifier = Modifier.size(100.dp).clip(CircleShape),
                 contentScale = ContentScale.Crop
             )
             

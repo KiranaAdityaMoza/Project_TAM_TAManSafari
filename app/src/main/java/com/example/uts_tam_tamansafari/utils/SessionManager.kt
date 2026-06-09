@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.data.repository
+package com.example.uts_tam_tamansafari.utils
 
 import android.content.Context
 import android.content.SharedPreferences

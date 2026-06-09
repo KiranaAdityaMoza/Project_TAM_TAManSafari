@@ -1,4 +1,4 @@
-package com.example.uts_tam_tamansafari.ui.screens.KebutuhanList
+package com.example.uts_tam_tamansafari.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -12,6 +12,8 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,12 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.uts_tam_tamansafari.R
+import com.example.uts_tam_tamansafari.data.model.Kebutuhan
 import com.example.uts_tam_tamansafari.ui.navigation.BottomNavigationBar
 import com.example.uts_tam_tamansafari.ui.navigation.Screen
 import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
-
-data class Kebutuhan(val id: Int, val nama: String, val jumlah: String, val lokasi: String, val tanggal: String, val imageRes: Int?)
+import com.example.uts_tam_tamansafari.ui.viewmodel.KebutuhanViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,15 +36,10 @@ fun KebutuhanListScreen(
     onBack: () -> Unit,
     onAddClick: () -> Unit,
     onItemClick: (Int) -> Unit,
-    onNavigateTo: (String) -> Unit
+    onNavigateTo: (String) -> Unit,
+    viewModel: KebutuhanViewModel = viewModel()
 ) {
-    val kebutuhanList = listOf(
-        Kebutuhan(1, "Beras", "50 kg", "Lokasi: Jakarta", "20 Mei 2025", R.drawable.beras),
-        Kebutuhan(2, "Cabai", "10 kg", "Lokasi: Bogor", "18 Mei 2025", R.drawable.cabai),
-        Kebutuhan(3, "Bawang Merah", "20 kg", "Lokasi: Depok", "15 Mei 2025", R.drawable.bawang_merah),
-        Kebutuhan(4, "Bawang Putih", "15 kg", "Lokasi: Jakarta", "14 Mei 2025", R.drawable.bawang_putih),
-        Kebutuhan(5, "Tomat", "30 kg", "Lokasi: Tangerang", "12 Mei 2025", R.drawable.tomat)
-    )
+    val kebutuhanList by viewModel.listKebutuhan.collectAsState()
 
     Scaffold(
         topBar = {
@@ -66,7 +64,6 @@ fun KebutuhanListScreen(
             )
         }
     ) { paddingValues ->
-        // Tab filter (ScrollableTabRow) sudah dihapus agar langsung menampilkan list
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -99,22 +96,20 @@ fun KebutuhanItem(item: Kebutuhan, onClick: () -> Unit) {
                 shape = RoundedCornerShape(8.dp),
                 color = Color.LightGray
             ) {
-                item.imageRes?.let {
-                    Image(
-                        painter = painterResource(id = it),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop
-                    )
-                }
+                Image(
+                    painter = painterResource(id = R.drawable.logo_distriagri),
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit
+                )
             }
             
             Spacer(modifier = Modifier.width(16.dp))
             
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = item.nama, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                Text(text = item.jumlah, fontWeight = FontWeight.Bold, color = Color.Black)
+                Text(text = item.komoditas, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(text = item.jumlah, fontWeight = FontWeight.Bold, color = GreenPrimary)
                 Text(text = item.lokasi, fontSize = 12.sp, color = Color.Gray)
-                Text(text = item.tanggal, fontSize = 10.sp, color = Color.Gray)
+                Text(text = item.status, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFFFA500))
             }
             
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.Gray)
