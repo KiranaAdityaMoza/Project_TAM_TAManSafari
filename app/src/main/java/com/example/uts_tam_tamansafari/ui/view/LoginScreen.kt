@@ -60,7 +60,12 @@ fun LoginScreen(
                 viewModel.resetState()
             }
             is LoginUiState.Error -> {
-                Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+                val customMessage = if (uiState.message.contains("400") || uiState.message.contains("Bad Request", ignoreCase = true)) {
+                    "Maaf, akun Anda belum terdaftar atau kombinasi salah."
+                } else {
+                    uiState.message
+                }
+                Toast.makeText(context, customMessage, Toast.LENGTH_LONG).show()
                 viewModel.resetState()
             }
             else -> {}
