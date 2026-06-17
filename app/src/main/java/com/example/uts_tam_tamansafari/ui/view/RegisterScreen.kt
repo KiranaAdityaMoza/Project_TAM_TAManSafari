@@ -121,13 +121,28 @@ fun RegisterScreen(
 
 @Composable
 fun CustomInputField(value: String, onValueChange: (String) -> Unit, placeholder: String, icon: ImageVector, isPassword: Boolean = false) {
+    // State lokal untuk melacak apakah password sedang di-reveal atau di-sensor
+    var passwordVisible by remember { mutableStateOf(false) }
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         placeholder = { Text(placeholder, color = Color.Gray) },
         leadingIcon = { Icon(icon, contentDescription = null, tint = Color.Gray) },
+        // Modifikasi bagian trailingIcon untuk mendeteksi apakah ini field password
+        trailingIcon = {
+            if (isPassword) {
+                val image = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                val description = if (passwordVisible) "Sembunyikan password" else "Tampilkan password"
+
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(imageVector = image, contentDescription = description, tint = Color.Gray)
+                }
+            }
+        },
         modifier = Modifier.fillMaxWidth(),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        // Atur visual transformation dinamis berdasarkan state passwordVisible
+        visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color(0xFFCCCCCC),
