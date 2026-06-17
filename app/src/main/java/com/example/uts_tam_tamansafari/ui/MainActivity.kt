@@ -23,8 +23,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Inisialisasi Repository agar SharedPreferences bisa menyimpan data
-        KebutuhanRepository.init(this)
+        val sessionManager = SessionManager(this)
+        // Inisialisasi Repository dengan username yang sedang login (jika ada)
+        KebutuhanRepository.init(this, sessionManager.getUserName())
         
         enableEdgeToEdge()
         setContent {
@@ -54,6 +55,8 @@ fun AppNavigation() {
         composable(Screen.Login.route) {
             LoginScreen(
                 onNavigateToDashboard = {
+                    // Update user di repository saat login berhasil
+                    KebutuhanRepository.setUser(sessionManager.getUserName() ?: "guest")
                     navController.navigate(Screen.Dashboard.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
@@ -133,7 +136,6 @@ fun AppNavigation() {
             )
         }
         
-        // Update rute Detail Matching agar menerima ID produk
         composable(
             route = "${Screen.DetailMatching.route}/{produkId}",
             arguments = listOf(navArgument("produkId") { type = NavType.IntType })
@@ -144,7 +146,6 @@ fun AppNavigation() {
                 onBack = { navController.popBackStack() },
                 onAjukanTransaksi = { 
                     navController.navigate(Screen.StatusTransaksi.route) {
-                        // Agar saat di status transaksi klik back tidak balik ke detail matching lagi
                         popUpTo(Screen.Matching.route) { inclusive = false }
                     }
                 },
@@ -164,6 +165,8 @@ fun AppNavigation() {
                 onBack = { navController.popBackStack() },
                 onLogout = {
                     sessionManager.logout()
+                    // Reset user di repository saat logout
+                    KebutuhanRepository.setUser("guest")
                     navController.navigate(Screen.Login.route) {
                         popUpTo(0) { inclusive = true }
                     }

@@ -22,10 +22,8 @@ data class Transaksi(
 )
 
 object KebutuhanRepository {
-    private const val PREF_NAME = "distriagri_prefs" // Menggunakan file yang sama dengan SessionManager
-    private const val KEY_KEBUTUHAN = "perm_list_kebutuhan"
-    private const val KEY_MATCHING = "perm_matching_results"
-    private const val KEY_TRANSAKSI = "perm_list_transaksi"
+    private const val PREF_NAME = "distriagri_prefs"
+    private var currentUsername: String = "guest"
 
     private lateinit var prefs: SharedPreferences
     private val gson = Gson()
@@ -39,12 +37,17 @@ object KebutuhanRepository {
     private val _listTransaksi = MutableStateFlow<List<Transaksi>>(emptyList())
     val listTransaksi: StateFlow<List<Transaksi>> = _listTransaksi
 
-    fun init(context: Context) {
+    fun init(context: Context, username: String?) {
         prefs = context.applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        setUser(username ?: "guest")
+    }
+
+    // Fungsi untuk ganti user (dipanggil saat login/logout)
+    fun setUser(username: String) {
+        currentUsername = username
         loadData()
     }
 
-    // Fungsi untuk mendapatkan ID gambar terbaru berdasarkan nama komoditas
     private fun getFreshImageRes(komoditas: String): Int {
         return when {
             komoditas.contains("Beras", true) -> R.drawable.beras
@@ -57,19 +60,24 @@ object KebutuhanRepository {
     }
 
     private fun saveData() {
-        // Menggunakan commit() agar data langsung tertulis secara sinkron ke storage
         prefs.edit().apply {
-            putString(KEY_KEBUTUHAN, gson.toJson(_listKebutuhan.value))
-            putString(KEY_MATCHING, gson.toJson(_matchingResults.value))
-            putString(KEY_TRANSAKSI, gson.toJson(_listTransaksi.value))
-            commit() 
+            // Simpan dengan prefix username
+            putString("${currentUsername}_kebutuhan", gson.toJson(_listKebutuhan.value))
+            putString("${currentUsername}_matching", gson.toJson(_matchingResults.value))
+            putString("${currentUsername}_transaksi", gson.toJson(_listTransaksi.value))
+            commit()
         }
     }
 
     private fun loadData() {
-        val jsonKebutuhan = prefs.getString(KEY_KEBUTUHAN, null)
-        val jsonMatching = prefs.getString(KEY_MATCHING, null)
-        val jsonTransaksi = prefs.getString(KEY_TRANSAKSI, null)
+        val jsonKebutuhan = prefs.getString("${currentUsername}_kebutuhan", null)
+        val jsonMatching = prefs.getString("${currentUsername}_matching", null)
+        val jsonTransaksi = prefs.getString("${currentUsername}_transaksi", null)
+
+        // Reset state dulu sebelum load data user baru
+        _listKebutuhan.value = emptyList()
+        _matchingResults.value = emptyList()
+        _listTransaksi.value = emptyList()
 
         if (jsonKebutuhan != null) {
             val type = object : TypeToken<List<Kebutuhan>>() {}.type
