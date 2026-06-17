@@ -1,6 +1,5 @@
 package com.example.uts_tam_tamansafari.ui.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -108,27 +106,13 @@ fun MatchingItem(produk: ProdukPetani, onDetailClick: () -> Unit) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                modifier = Modifier.size(60.dp),
-                shape = RoundedCornerShape(8.dp),
-                color = Color.LightGray
-            ) {
-                Image(
-                    painter = painterResource(id = produk.gambarRes),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
-            }
-            
-            Spacer(modifier = Modifier.width(16.dp))
-            
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = produk.namaProduk, fontWeight = FontWeight.Bold)
                 Text(text = produk.namaPetani, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = GreenPrimary)
                 Text(text = "Tersedia: Banyak", fontSize = 12.sp, color = Color.Gray)
                 Text(text = "Lokasi: ${produk.lokasi}", fontSize = 12.sp, color = Color.Gray)
             }
-            
+
             Column(horizontalAlignment = Alignment.End) {
                 Surface(color = LightGreen, shape = RoundedCornerShape(4.dp)) {
                     Text(

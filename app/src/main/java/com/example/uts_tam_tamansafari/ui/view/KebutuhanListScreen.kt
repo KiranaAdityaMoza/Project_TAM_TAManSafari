@@ -1,6 +1,5 @@
 package com.example.uts_tam_tamansafari.ui.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -64,16 +62,50 @@ fun KebutuhanListScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(vertical = 16.dp)
-        ) {
-            items(kebutuhanList) { item ->
-                KebutuhanItem(item = item, onClick = { onItemClick(item.id) })
+        if (kebutuhanList.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.logo_distriagri),
+                        contentDescription = null,
+                        modifier = Modifier.size(100.dp),
+                        tint = Color.Gray.copy(alpha = 0.5f)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        "Belum ada data kebutuhan.",
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        "Silahkan tekan tombol + di pojok kanan atas",
+                        color = Color.Gray,
+                        fontSize = 12.sp
+                    )
+                    Text(
+                        "untuk menambahkan data.",
+                        color = Color.Gray,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(vertical = 16.dp)
+            ) {
+                items(kebutuhanList) { item ->
+                    KebutuhanItem(item = item, onClick = { onItemClick(item.id) })
+                }
             }
         }
     }
@@ -91,21 +123,6 @@ fun KebutuhanItem(item: Kebutuhan, onClick: () -> Unit) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                modifier = Modifier.size(60.dp),
-                shape = RoundedCornerShape(8.dp),
-                color = Color.LightGray
-            ) {
-                Image(
-                    painter = painterResource(id = item.imageRes),
-                    contentDescription = item.komoditas,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            
-            Spacer(modifier = Modifier.width(16.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = item.komoditas,
@@ -138,7 +155,7 @@ fun KebutuhanItem(item: Kebutuhan, onClick: () -> Unit) {
                     color = Color(0xFFFFA500)
                 )
             }
-            
+
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = Color.Gray)
         }
     }

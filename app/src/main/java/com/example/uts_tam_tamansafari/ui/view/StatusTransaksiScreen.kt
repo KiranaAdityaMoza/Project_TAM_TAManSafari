@@ -1,6 +1,5 @@
 package com.example.uts_tam_tamansafari.ui.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,8 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +22,7 @@ import com.example.uts_tam_tamansafari.data.repository.Transaksi
 import com.example.uts_tam_tamansafari.ui.navigation.BottomNavigationBar
 import com.example.uts_tam_tamansafari.ui.navigation.Screen
 import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
+import androidx.compose.ui.res.painterResource
 import com.example.uts_tam_tamansafari.ui.viewmodel.KebutuhanViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,18 +100,6 @@ fun TransaksiItem(transaksi: Transaksi) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                modifier = Modifier.size(50.dp),
-                shape = RoundedCornerShape(8.dp),
-                color = Color.LightGray
-            ) {
-                Image(
-                    painter = painterResource(id = transaksi.produk.gambarRes),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
-            }
-            Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = "${transaksi.produk.namaProduk} - ${transaksi.produk.namaPetani}", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                 Text(text = "Status: ${transaksi.status}", fontSize = 12.sp, color = GreenPrimary)
