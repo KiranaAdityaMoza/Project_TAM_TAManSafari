@@ -59,7 +59,7 @@ class SessionManager(context: Context) {
         return true
     }
 
-    fun logout() {
+    fun logout() { 
         prefs.edit()
             .remove(KEY_TOKEN)
             .remove(KEY_LOGIN_TIMESTAMP)
