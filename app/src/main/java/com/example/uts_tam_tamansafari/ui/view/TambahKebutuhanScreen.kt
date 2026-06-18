@@ -14,6 +14,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.uts_tam_tamansafari.ui.theme.GreenPrimary
 import com.example.uts_tam_tamansafari.ui.viewmodel.KebutuhanViewModel
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +46,10 @@ fun TambahKebutuhanScreen(
     }
 
     var expanded by remember { mutableStateOf(false) }
+
+    var komoditasError by remember { mutableStateOf("") }
+    var jumlahError by remember { mutableStateOf("") }
+    var lokasiError by remember { mutableStateOf("") }
 
     val komoditasOptions = listOf(
         "Beras",
@@ -106,36 +113,92 @@ fun TambahKebutuhanScreen(
                             onClick = {
                                 selectedKomoditas = selectionOption
                                 expanded = false
+                                komoditasError = ""
                             }
                         )
                     }
                 }
             }
 
-            Text(text = "Jumlah (kg)", fontWeight = FontWeight.Bold)
+            if (komoditasError.isNotEmpty()) {
+                Text(
+                    text = komoditasError,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+            Text(
+                text = "Jumlah (kg)",
+                fontWeight = FontWeight.Bold
+            )
+
             OutlinedTextField(
                 value = jumlah,
-                onValueChange = { jumlah = it },
+                onValueChange = {
+                    if (it.all { c -> c.isDigit() }) {
+                        jumlah = it
+                        jumlahError = ""
+                    }
+                },
                 placeholder = { Text("Masukkan jumlah") },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                isError = jumlahError.isNotEmpty(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                )
             )
 
-            Text(text = "Lokasi", fontWeight = FontWeight.Bold)
+            if (jumlahError.isNotEmpty()) {
+                Text(
+                    text = jumlahError,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+            Text(
+                text = "Lokasi",
+                fontWeight = FontWeight.Bold
+            )
+
             OutlinedTextField(
                 value = lokasi,
-                onValueChange = { lokasi = it },
+                onValueChange = {
+                    if (it.length <= 50) {
+                        lokasi = it
+                        lokasiError = ""
+                    }
+                },
                 placeholder = { Text("Masukkan lokasi") },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                isError = lokasiError.isNotEmpty()
             )
 
-            Text(text = "Catatan (opsional)", fontWeight = FontWeight.Bold)
+            if (lokasiError.isNotEmpty()) {
+                Text(
+                    text = lokasiError,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+            Text(
+                text = "Catatan (opsional)",
+                fontWeight = FontWeight.Bold
+            )
+
             OutlinedTextField(
                 value = catatan,
-                onValueChange = { catatan = it },
-                placeholder = { Text("Tambahkan catatan...") },
-                modifier = Modifier.fillMaxWidth().height(100.dp),
+                onValueChange = {
+                    if (it.length <= 100)
+                        catatan = it
+                },
+                placeholder = {
+                    Text("Tambahkan catatan...")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
                 shape = RoundedCornerShape(12.dp)
             )
 
@@ -143,31 +206,63 @@ fun TambahKebutuhanScreen(
 
             Button(
                 onClick = {
-                    if (selectedKomoditas != "Pilih Komoditas" && jumlah.isNotEmpty()) {
 
-                        if (kebutuhanId == null) {
+                    komoditasError = ""
+                    jumlahError = ""
+                    lokasiError = ""
 
-                            viewModel.tambahKebutuhan(
-                                selectedKomoditas,
-                                jumlah,
-                                lokasi,
-                                catatan
-                            )
+                    when {
 
-                        } else {
-
-                            viewModel.updateKebutuhan(
-                                kebutuhan!!.copy(
-                                    komoditas = selectedKomoditas,
-                                    jumlah = jumlah,
-                                    lokasi = lokasi,
-                                    catatan = catatan,
-                                    imageRes = viewModel.getImageRes(selectedKomoditas)
-                                )
-                            )
+                        selectedKomoditas == "Pilih Komoditas" -> {
+                            komoditasError = "Silakan pilih komoditas"
                         }
 
-                        onSimpan()
+                        jumlah.isBlank() -> {
+                            jumlahError = "Jumlah tidak boleh kosong"
+                        }
+
+                        jumlah.toIntOrNull() == null -> {
+                            jumlahError = "Jumlah harus berupa angka"
+                        }
+
+                        jumlah.toInt() <= 0 -> {
+                            jumlahError = "Jumlah minimal 1 kg"
+                        }
+
+                        jumlah.toInt() > 1000 -> {
+                            jumlahError = "Jumlah maksimal 1000 kg"
+                        }
+
+                        lokasi.isBlank() -> {
+                            lokasiError = "Lokasi tidak boleh kosong"
+                        }
+
+                        else -> {
+
+                            if (kebutuhanId == null) {
+
+                                viewModel.tambahKebutuhan(
+                                    selectedKomoditas,
+                                    jumlah,
+                                    lokasi,
+                                    catatan
+                                )
+
+                            } else {
+
+                                viewModel.updateKebutuhan(
+                                    kebutuhan!!.copy(
+                                        komoditas = selectedKomoditas,
+                                        jumlah = jumlah,
+                                        lokasi = lokasi,
+                                        catatan = catatan,
+                                        imageRes = viewModel.getImageRes(selectedKomoditas)
+                                    )
+                                )
+                            }
+
+                            onSimpan()
+                        }
                     }
                 },
                 modifier = Modifier
