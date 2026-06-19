@@ -130,11 +130,18 @@ object KebutuhanRepository {
 
     fun performMatching(kebutuhanId: Int) {
         val kebutuhan = _listKebutuhan.value.find { it.id == kebutuhanId }
+
         if (kebutuhan != null) {
+
+            val jumlahKebutuhan = kebutuhan.jumlah.toInt()
+
             val matches = PetaniData.listProdukPetani.filter {
-                it.namaProduk.contains(kebutuhan.komoditas, ignoreCase = true)
+                it.namaProduk.contains(kebutuhan.komoditas, ignoreCase = true) &&
+                        it.stok >= jumlahKebutuhan
             }
-            _matchingResults.value = (_matchingResults.value + matches).distinctBy { it.id }
+
+            _matchingResults.value = matches
+
             updateStatus(kebutuhanId, "Sudah Matching")
             saveData()
         }
