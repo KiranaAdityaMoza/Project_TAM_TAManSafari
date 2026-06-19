@@ -103,7 +103,7 @@ fun DetailMatchingScreen(
                             Text(text = produk.namaProduk, fontWeight = FontWeight.Bold)
                             Row {
                                 Text(text = "Tersedia", modifier = Modifier.width(80.dp), color = Color.Gray)
-                                Text(text = ": Banyak")
+                                Text(text = ": ${produk.stok} kg")
                             }
                             Row {
                                 Text(text = "Harga", modifier = Modifier.width(80.dp), color = Color.Gray)
